@@ -1,0 +1,36 @@
+[
+  {
+    "serviceId": "acrylic-refill",
+    "serviceName": "Acrylic Refill",
+    "technicianId": "sophia",
+    "technicianName": "Sophia",
+    "date": "2026-05-23",
+    "time": "9:30 AM",
+    "duration": 60,
+    "customerName": "Khánh Duy Nguyễn",
+    "customerPhone": "324134134ádfasd",
+    "customerEmail": "khanhduy2002tpqn@gmail.com",
+    "notes": "fdfefefqefsadfd",
+    "status": "confirmed",
+    "id": "acefb9f1-b2af-419e-be34-1b7aafe81025",
+    "createdAt": "2026-05-22T15:24:28.896Z",
+    "updatedAt": "2026-05-22T15:24:28.896Z"
+  },
+  {
+    "serviceId": "mani-spa",
+    "serviceName": "Spa Manicure",
+    "technicianId": "mia",
+    "technicianName": "Mia",
+    "date": "2026-05-23",
+    "time": "9:30 AM",
+    "duration": 45,
+    "customerName": "Khánh Duy Nguyễn",
+    "customerPhone": "324234324134134",
+    "customerEmail": "khanhduy2002tpqn@gmail.com",
+    "notes": "",
+    "status": "confirmed",
+    "id": "1daccb23-dc34-4b52-9d81-5c677b768664",
+    "createdAt": "2026-05-23T14:26:25.093Z",
+    "updatedAt": "2026-05-23T14:26:25.093Z"
+  }
+]
