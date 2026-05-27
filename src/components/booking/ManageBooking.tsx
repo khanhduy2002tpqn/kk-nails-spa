@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import type { Booking } from "@/types";
 
@@ -12,16 +12,19 @@ export function ManageBooking() {
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("");
 
-  const lookup = async () => {
+  const lookup = async (idParam?: string) => {
+    const id = idParam ?? bookingId;
+    if (!id) return;
     setLoading(true);
     setMessage("");
     try {
-      const res = await fetch(`/api/bookings/${bookingId}`);
+      const res = await fetch(`/api/bookings/${id}`);
       if (!res.ok) throw new Error("Booking not found");
       const data = await res.json();
       setBooking(data);
       setNewDate(data.date);
       setNewTime(data.time);
+      setBookingId(id);
     } catch {
       setBooking(null);
       setMessage("Could not find booking. Check your confirmation ID.");
@@ -29,6 +32,14 @@ export function ManageBooking() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    if (id) lookup(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const cancel = async () => {
     const res = await fetch(`/api/bookings/${bookingId}`, { method: "DELETE" });
@@ -64,7 +75,7 @@ export function ManageBooking() {
           onChange={(e) => setBookingId(e.target.value)}
           placeholder="Confirmation ID"
         />
-        <button type="button" onClick={lookup} disabled={loading} className="btn-primary shrink-0">
+        <button type="button" onClick={() => lookup()} disabled={loading} className="btn-primary shrink-0">
           {loading ? <Loader2 size={16} className="animate-spin" /> : "Find"}
         </button>
       </div>
