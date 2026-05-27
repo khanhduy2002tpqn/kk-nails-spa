@@ -8,7 +8,7 @@ import { GALLERY_ITEMS } from "@/lib/constants";
 const filters = [
   { id: "all", label: "All" },
   { id: "nails", label: "Nail Art" },
-  { id: "clients", label: "Our Work" },
+  { id: "interior", label: "Our Space" },
 ] as const;
 
 export function Gallery() {

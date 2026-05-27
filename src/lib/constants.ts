@@ -123,7 +123,7 @@ export const TESTIMONIALS: Testimonial[] = [
 
 export const GALLERY_ITEMS: GalleryItem[] = GALLERY_IMAGE_PATHS.map((item, i) => ({
   id: String(i + 1),
-  src: `/images/gallery/${item.file}.png`,
+  src: `/images/gallery/${item.file}`,
   alt: item.alt,
   category: item.category,
   ...(item.span ? { span: item.span } : {}),

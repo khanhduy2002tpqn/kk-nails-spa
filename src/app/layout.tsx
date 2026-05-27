@@ -56,6 +56,7 @@ export default function RootLayout({
         <ThemeScript />
       </head>
       <body
+        suppressHydrationWarning
         className={`${montserrat.variable} ${roboto.variable} min-h-screen antialiased`}
       >
         <ThemeProvider>

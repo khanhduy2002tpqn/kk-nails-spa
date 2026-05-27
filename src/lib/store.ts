@@ -1,41 +1,22 @@
-import { promises as fs } from "fs";
-import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import type { BlockedSlot, Booking } from "@/types";
+import { getMongoDb } from "./mongodb";
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const BOOKINGS_FILE = path.join(DATA_DIR, "bookings.json");
-const BLOCKED_FILE = path.join(DATA_DIR, "blocked-slots.json");
-
-async function ensureDataDir() {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-}
-
-async function readJson<T>(file: string, fallback: T): Promise<T> {
-  try {
-    const raw = await fs.readFile(file, "utf-8");
-    return JSON.parse(raw) as T;
-  } catch {
-    return fallback;
-  }
-}
-
-async function writeJson<T>(file: string, data: T) {
-  await ensureDataDir();
-  await fs.writeFile(file, JSON.stringify(data, null, 2), "utf-8");
-}
+const BOOKINGS_COLLECTION = "bookings";
+const BLOCKED_COLLECTION = "blockedSlots";
 
 export async function getBookings(): Promise<Booking[]> {
-  return readJson<Booking[]>(BOOKINGS_FILE, []);
+  const db = await getMongoDb();
+  return db.collection<Booking>(BOOKINGS_COLLECTION).find().toArray();
 }
 
 export async function getBookingById(id: string): Promise<Booking | null> {
-  const bookings = await getBookings();
-  return bookings.find((b) => b.id === id) ?? null;
+  const db = await getMongoDb();
+  return db.collection<Booking>(BOOKINGS_COLLECTION).findOne({ id });
 }
 
 export async function saveBooking(booking: Omit<Booking, "id" | "createdAt" | "updatedAt">): Promise<Booking> {
-  const bookings = await getBookings();
+  const db = await getMongoDb();
   const now = new Date().toISOString();
   const newBooking: Booking = {
     ...booking,
@@ -43,38 +24,43 @@ export async function saveBooking(booking: Omit<Booking, "id" | "createdAt" | "u
     createdAt: now,
     updatedAt: now,
   };
-  bookings.push(newBooking);
-  await writeJson(BOOKINGS_FILE, bookings);
+  await db.collection<Booking>(BOOKINGS_COLLECTION).insertOne(newBooking);
   return newBooking;
 }
 
 export async function updateBooking(id: string, patch: Partial<Booking>): Promise<Booking | null> {
-  const bookings = await getBookings();
-  const idx = bookings.findIndex((b) => b.id === id);
-  if (idx === -1) return null;
-  bookings[idx] = { ...bookings[idx], ...patch, updatedAt: new Date().toISOString() };
-  await writeJson(BOOKINGS_FILE, bookings);
-  return bookings[idx];
+  const db = await getMongoDb();
+  const updated = await db
+    .collection<Booking>(BOOKINGS_COLLECTION)
+    .findOneAndUpdate(
+      { id },
+      { $set: { ...patch, updatedAt: new Date().toISOString() } },
+      { returnDocument: "after" }
+    );
+
+  if (!updated) {
+    return null;
+  }
+
+  return updated;
 }
 
 export async function getBlockedSlots(): Promise<BlockedSlot[]> {
-  return readJson<BlockedSlot[]>(BLOCKED_FILE, []);
+  const db = await getMongoDb();
+  return db.collection<BlockedSlot>(BLOCKED_COLLECTION).find().toArray();
 }
 
 export async function saveBlockedSlot(slot: Omit<BlockedSlot, "id">): Promise<BlockedSlot> {
-  const slots = await getBlockedSlots();
+  const db = await getMongoDb();
   const newSlot: BlockedSlot = { ...slot, id: uuidv4() };
-  slots.push(newSlot);
-  await writeJson(BLOCKED_FILE, slots);
+  await db.collection<BlockedSlot>(BLOCKED_COLLECTION).insertOne(newSlot);
   return newSlot;
 }
 
 export async function removeBlockedSlot(id: string): Promise<boolean> {
-  const slots = await getBlockedSlots();
-  const filtered = slots.filter((s) => s.id !== id);
-  if (filtered.length === slots.length) return false;
-  await writeJson(BLOCKED_FILE, filtered);
-  return true;
+  const db = await getMongoDb();
+  const result = await db.collection<BlockedSlot>(BLOCKED_COLLECTION).deleteOne({ id });
+  return result.deletedCount === 1;
 }
 
 export async function seedSampleData() {

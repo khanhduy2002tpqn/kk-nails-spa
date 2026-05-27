@@ -45,6 +45,7 @@ Copy `.env.example` to `.env.local`:
 ADMIN_SECRET=your-secure-key
 RESEND_API_KEY=          # Optional — sends real confirmation emails
 RESEND_FROM_EMAIL=
+MONGODB_URI=            # Required for MongoDB persistence
 ```
 
 ## Booking System
