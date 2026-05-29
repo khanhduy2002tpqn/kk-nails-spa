@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat, Roboto } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { ThemeScript } from "@/components/providers/ThemeScript";
 import { Navbar } from "@/components/layout/Navbar";
@@ -66,6 +67,7 @@ export default function RootLayout({
           <Footer />
           <FloatingBookButton />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
