@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SERVICES, TECHNICIANS } from "@/lib/constants";
+import { SERVICES } from "@/lib/constants";
 import { isSlotAvailable } from "@/lib/booking-utils";
 import { sendConfirmationEmail } from "@/lib/email";
-import { getBlockedSlots, getBookings, saveBooking, seedSampleData } from "@/lib/store";
+import { getBlockedSlots, getBookings, getTechnicianById, saveBooking, seedSampleData } from "@/lib/store";
 import { bookingSchema } from "@/lib/validation";
 
 export async function GET() {
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     const data = parsed.data;
     const service = SERVICES.find((s) => s.id === data.serviceId);
-    const technician = TECHNICIANS.find((t) => t.id === data.technicianId);
+    const technician = await getTechnicianById(data.technicianId);
 
     if (!service || !technician?.active) {
       return NextResponse.json({ error: "Invalid service or technician" }, { status: 400 });

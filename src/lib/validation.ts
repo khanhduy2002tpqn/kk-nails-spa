@@ -24,3 +24,22 @@ export const blockedSlotSchema = z.object({
   technicianId: z.string().optional(),
   reason: z.string().max(200).optional(),
 });
+
+export const staffLoginSchema = z.object({
+  username: z.string().trim().min(2).max(50),
+  password: z.string().min(6).max(100),
+});
+
+export const staffAccountSchema = z.object({
+  username: z.string().trim().min(2).max(50),
+  password: z.string().min(6).max(100),
+  technicianId: z.string().min(1),
+});
+
+export const technicianAccountSchema = z.object({
+  name: z.string().trim().min(2).max(80),
+  title: z.string().trim().min(2).max(100),
+  specialties: z.array(z.string().trim().min(1).max(50)).min(1).max(8),
+  username: z.string().trim().min(2).max(50),
+  password: z.string().min(6).max(100),
+});

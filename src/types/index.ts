@@ -55,6 +55,22 @@ export interface BlockedSlot {
   reason?: string;
 }
 
+export type StaffRole = "administrator" | "technician";
+
+export interface StaffAccount {
+  id: string;
+  username: string;
+  passwordHash: string;
+  role: StaffRole;
+  technicianId?: string;
+  technicianName?: string;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type PublicStaffAccount = Omit<StaffAccount, "passwordHash">;
+
 export interface Testimonial {
   id: string;
   name: string;

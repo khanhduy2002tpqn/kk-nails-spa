@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SERVICES } from "@/lib/constants";
 import { getAvailableSlots } from "@/lib/booking-utils";
-import { getBlockedSlots, getBookings } from "@/lib/store";
+import { getBlockedSlots, getBookings, getTechnicianById } from "@/lib/store";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -19,6 +19,11 @@ export async function GET(request: NextRequest) {
   const service = SERVICES.find((s) => s.id === serviceId);
   if (!service) {
     return NextResponse.json({ error: "Service not found" }, { status: 404 });
+  }
+
+  const technician = await getTechnicianById(technicianId);
+  if (!technician?.active) {
+    return NextResponse.json({ error: "Technician not found" }, { status: 404 });
   }
 
   const [bookings, blocked] = await Promise.all([getBookings(), getBlockedSlots()]);

@@ -7,7 +7,7 @@ A modern website for **K&K Nails and Spa** — a Folcroft, Pennsylvania nail sal
 - **Homepage** — Full-screen hero, about, services & pricing, gallery, testimonials, Instagram-style feed, contact with Google Maps, promo banner
 - **Online booking** — Multi-step flow with calendar, real-time availability, technician selection, confirmation emails
 - **Manage appointments** — Cancel or reschedule via confirmation ID
-- **Admin dashboard** — View bookings, customer database, block time slots, manage technicians
+- **Admin dashboard** — View bookings, customer database, block time slots, add/remove technicians, create technician accounts
 - **Design** — Soft pink, nude beige, gold accents; light/dark themes; Framer Motion animations
 - **SEO** — Local salon keywords, sitemap, robots.txt, Open Graph metadata
 
@@ -40,14 +40,16 @@ Open [http://localhost:3000](http://localhost:3000)
 |-------|-------------|
 | `/` | Homepage |
 | `/book` | Online booking + manage appointment |
-| `/admin` | Admin dashboard (key: `kk-admin-2026` by default) |
+| `/admin` | Staff dashboard with administrator and technician accounts |
 
 ### Environment Variables
 
 Copy `.env.example` to `.env.local`:
 
 ```bash
-ADMIN_SECRET=your-secure-key
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your-secure-password
+ADMIN_SECRET=your-secure-admin-api-key
 RESEND_API_KEY=          # Optional — sends real confirmation emails
 RESEND_FROM_EMAIL=
 MONGODB_URI=            # Required for MongoDB persistence

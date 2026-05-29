@@ -12,9 +12,9 @@ import {
   Loader2,
   User,
 } from "lucide-react";
-import { SERVICES, TECHNICIANS } from "@/lib/constants";
+import { SERVICES } from "@/lib/constants";
 import { formatConfirmationId } from "@/lib/confirmation";
-import type { Booking } from "@/types";
+import type { Booking, Technician } from "@/types";
 import "react-day-picker/style.css";
 
 const STEPS = ["Service", "Technician", "Date & Time", "Your Info", "Confirm"];
@@ -25,6 +25,7 @@ export function BookingForm() {
   const [technicianId, setTechnicianId] = useState("");
   const [date, setDate] = useState<Date | undefined>();
   const [time, setTime] = useState("");
+  const [technicians, setTechnicians] = useState<Technician[]>([]);
   const [slots, setSlots] = useState<string[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -38,8 +39,22 @@ export function BookingForm() {
   });
 
   const service = SERVICES.find((s) => s.id === serviceId);
-  const technician = TECHNICIANS.find((t) => t.id === technicianId);
+  const technician = technicians.find((t) => t.id === technicianId);
   const dateStr = date ? format(date, "yyyy-MM-dd") : "";
+
+  useEffect(() => {
+    const loadTechnicians = async () => {
+      try {
+        const res = await fetch("/api/technicians");
+        if (!res.ok) throw new Error("Could not load technicians");
+        setTechnicians(await res.json());
+      } catch {
+        setTechnicians([]);
+      }
+    };
+
+    loadTechnicians();
+  }, []);
 
   const fetchSlots = useCallback(async () => {
     if (!dateStr || !serviceId || !technicianId) return;
@@ -204,7 +219,7 @@ export function BookingForm() {
             <div>
               <h3 className="font-display text-xl font-bold">Choose Your Technician</h3>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                {TECHNICIANS.filter((t) => t.active).map((t) => {
+                {technicians.filter((t) => t.active).map((t) => {
                   const selected = technicianId === t.id;
                   return (
                     <motion.button
@@ -246,6 +261,9 @@ export function BookingForm() {
                     </motion.button>
                   );
                 })}
+                {technicians.length === 0 && (
+                  <p className="text-sm text-muted">No technicians are available right now.</p>
+                )}
               </div>
             </div>
           )}
