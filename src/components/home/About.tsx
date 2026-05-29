@@ -18,13 +18,13 @@ const features = [
   },
   {
     icon: Heart,
-    title: "Luxury Atmosphere",
-    text: "Relax in a serene, feminine space designed to melt away stress and elevate your self-care ritual.",
+    title: "Comfortable Atmosphere",
+    text: "Relax in a calm, welcoming space designed to make every visit easy and comfortable.",
   },
   {
     icon: Droplets,
-    title: "Premium Products",
-    text: "We use top-tier professional brands for lasting shine, gentle formulas, and beautiful results.",
+    title: "Professional Products",
+    text: "We use trusted professional brands for lasting shine, gentle formulas, and beautiful results.",
   },
   {
     icon: Users,
@@ -57,12 +57,11 @@ export function About() {
 
           <div>
             <p className="section-label">About Us</p>
-            <h2 className="section-title">Your Sanctuary of Beauty</h2>
+            <h2 className="section-title">Your Local Nail & Spa Studio</h2>
             <p className="mt-4 text-lg text-muted leading-relaxed">
-              Welcome to K&K Nails and Spa — Folcroft&apos;s destination for luxury nail care and spa
-              services. We blend artistry with relaxation, delivering impeccable manicures,
-              pedicures, waxing, and lash treatments in an environment that feels as premium as the
-              results we create.
+              Welcome to K&K Nails and Spa — Folcroft&apos;s destination for nail care and spa
+              services. We blend artistry with relaxation, delivering detailed manicures,
+              pedicures, waxing, and lash treatments in a clean, friendly environment.
             </p>
             <p className="mt-4 text-lg text-muted leading-relaxed">
               Whether you&apos;re preparing for a special occasion or treating yourself to weekly
@@ -79,7 +78,7 @@ export function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              className="luxury-card text-center sm:text-left"
+              className="soft-card text-center sm:text-left"
             >
               <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-pink-blush text-pink-accent dark:bg-white/5 dark:text-pink-cream sm:mx-0">
                 <f.icon size={22} />

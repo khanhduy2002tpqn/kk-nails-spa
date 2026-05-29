@@ -18,7 +18,7 @@ export const GALLERY_IMAGE_PATHS = [
   { file: "09.png", alt: "Winter snowflake and bow nail design", category: "nails" as const },
   { file: "10.png", alt: "Valentine hearts nail art", category: "nails" as const },
   { file: "11.png", alt: "Holiday festive nail art", category: "nails" as const },
-  { file: "12.png", alt: "Gold gem stiletto luxury nails", category: "nails" as const, span: "tall" as const },
+  { file: "12.png", alt: "Gold gem stiletto nail design", category: "nails" as const, span: "tall" as const },
   { file: "13.png", alt: "Professional 3D floral manicure at K&K", category: "clients" as const },
   { file: "14.jpg", alt: "Salon interior and seating space", category: "interior" as const, span: "wide" as const },
   { file: "15.jpg", alt: "Reception and decoration area", category: "interior" as const },

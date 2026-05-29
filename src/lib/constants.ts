@@ -3,7 +3,7 @@ import { GALLERY_IMAGE_PATHS } from "./images";
 
 export const BRAND = {
   name: "K&K Nails and Spa",
-  tagline: "Luxury Nails & Spa Experience",
+  tagline: "Nails & Spa Care in Folcroft",
   phone: "610-586-7078",
   phoneRaw: "6105867078",
   email: "hello@kknailsandspa.com",
@@ -35,7 +35,7 @@ export const SLOT_INTERVAL_MINUTES = 30;
 export const SERVICES: Service[] = [
   { id: "mani-classic", name: "Classic Manicure", category: "manicure", duration: 30, price: 20 },
   { id: "mani-spa", name: "Spa Manicure", category: "manicure", duration: 45, price: 30 },
-  { id: "mani-gel", name: "Luxury Gel Manicure", category: "gel", duration: 45, price: 45 },
+  { id: "mani-gel", name: "Signature Gel Manicure", category: "gel", duration: 45, price: 45 },
   { id: "mani-gel-french", name: "Gel French Manicure", category: "gel", duration: 50, price: 40 },
   { id: "pedi-classic", name: "Classic Pedicure", category: "pedicure", duration: 45, price: 35 },
   { id: "pedi-spa", name: "Spa Pedicure", category: "pedicure", duration: 60, price: 45 },
@@ -56,7 +56,7 @@ export const SERVICES: Service[] = [
   { id: "lash-individual", name: "Individual Lashes (Natural)", category: "eyelash", duration: 90, price: 35 },
   { id: "lash-thick", name: "Individual Lashes (Thick)", category: "eyelash", duration: 120, price: 60 },
   { id: "spa-duo", name: "Mani + Pedi Spa Package", category: "spa", duration: 90, price: 70 },
-  { id: "spa-luxury", name: "Luxury Relaxation Package", category: "spa", duration: 120, price: 95 },
+  { id: "spa-relaxation", name: "Relaxation Spa Package", category: "spa", duration: 120, price: 95 },
 ];
 
 export const SERVICE_CATEGORIES: { id: string; label: string }[] = [
@@ -83,7 +83,7 @@ export const TESTIMONIALS: Testimonial[] = [
     id: "1",
     name: "Jessica M.",
     rating: 5,
-    text: "The most luxurious nail experience I've had in the Philadelphia area. Immaculate salon, stunning nail art, and the staff made me feel like royalty.",
+    text: "One of the best nail visits I've had in the Philadelphia area. Immaculate salon, stunning nail art, and the staff made me feel welcome.",
     service: "Gel Manicure & Nail Art",
     date: "March 2026",
   },
@@ -130,12 +130,12 @@ export const GALLERY_ITEMS: GalleryItem[] = GALLERY_IMAGE_PATHS.map((item, i) =>
 }));
 
 export const NAV_LINKS = [
-  { href: "#home", label: "Home" },
-  { href: "#about", label: "About" },
-  { href: "#services", label: "Services" },
-  { href: "#gallery", label: "Gallery" },
-  { href: "#reviews", label: "Reviews" },
-  { href: "#contact", label: "Contact" },
+  { href: "/#home", label: "Home" },
+  { href: "/#about", label: "About" },
+  { href: "/#services", label: "Services" },
+  { href: "/#gallery", label: "Gallery" },
+  { href: "/#reviews", label: "Reviews" },
+  { href: "/#contact", label: "Contact" },
 ];
 
 export { INSTAGRAM_IMAGES as INSTAGRAM_PLACEHOLDER } from "./images";

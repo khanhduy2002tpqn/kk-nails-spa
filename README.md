@@ -1,6 +1,6 @@
 # K&K Nails and Spa
 
-A modern luxury website for **K&K Nails and Spa** — Folcroft, Pennsylvania's premium nail salon and spa experience.
+A modern website for **K&K Nails and Spa** — a Folcroft, Pennsylvania nail salon and spa.
 
 ## Features
 
@@ -8,8 +8,13 @@ A modern luxury website for **K&K Nails and Spa** — Folcroft, Pennsylvania's p
 - **Online booking** — Multi-step flow with calendar, real-time availability, technician selection, confirmation emails
 - **Manage appointments** — Cancel or reschedule via confirmation ID
 - **Admin dashboard** — View bookings, customer database, block time slots, manage technicians
-- **Design** — Soft pink, nude beige, gold accents; light/dark luxury themes; Framer Motion animations
+- **Design** — Soft pink, nude beige, gold accents; light/dark themes; Framer Motion animations
 - **SEO** — Local salon keywords, sitemap, robots.txt, Open Graph metadata
+
+## Documentation
+
+- `DEV_GUIDE.md` — developer setup, architecture, tests, and deployment
+- `USER_MANUAL.md` — end-user booking instructions and admin usage
 
 ## Tech Stack
 

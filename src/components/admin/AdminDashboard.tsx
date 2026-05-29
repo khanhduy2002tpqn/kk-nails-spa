@@ -96,7 +96,7 @@ export function AdminDashboard() {
 
   if (!authenticated) {
     return (
-      <div className="luxury-card mx-auto max-w-md">
+      <div className="soft-card mx-auto max-w-md">
         <Lock className="mx-auto h-10 w-10 text-pink-accent" />
         <h2 className="mt-4 text-center font-display text-xl font-semibold">Admin Login</h2>
         <p className="mt-2 text-center text-sm text-muted">
@@ -137,7 +137,7 @@ export function AdminDashboard() {
           { label: "Confirmed", value: bookings.filter((b) => b.status === "confirmed").length, icon: CheckCircle },
           { label: "Customers", value: customers.length, icon: Users },
         ].map((stat) => (
-          <div key={stat.label} className="luxury-card flex items-center gap-3">
+          <div key={stat.label} className="soft-card flex items-center gap-3">
             <stat.icon className="text-pink-accent" size={22} />
             <div>
               <p className="text-2xl font-semibold">{stat.value}</p>
@@ -222,7 +222,7 @@ export function AdminDashboard() {
 
       {tab === "blocked" && (
         <div className="grid gap-6 lg:grid-cols-2">
-          <div className="luxury-card space-y-3">
+          <div className="soft-card space-y-3">
             <h3 className="font-display font-semibold flex items-center gap-2">
               <Ban size={18} /> Block Time Slot
             </h3>
@@ -270,7 +270,7 @@ export function AdminDashboard() {
           </div>
           <ul className="space-y-2">
             {blocked.map((bl) => (
-              <li key={bl.id} className="luxury-card flex items-center justify-between text-sm">
+              <li key={bl.id} className="soft-card flex items-center justify-between text-sm">
                 <span>
                   {bl.date} · {bl.startTime}–{bl.endTime}
                   {bl.technicianId && ` · ${bl.technicianId}`}
@@ -287,7 +287,7 @@ export function AdminDashboard() {
       {tab === "technicians" && (
         <div className="grid gap-4 sm:grid-cols-2">
           {TECHNICIANS.map((t) => (
-            <div key={t.id} className="luxury-card">
+            <div key={t.id} className="soft-card">
               <div className="flex items-center justify-between">
                 <h3 className="font-display font-semibold">{t.name}</h3>
                 <span
@@ -316,7 +316,7 @@ export function AdminDashboard() {
           <h3 className="font-display text-lg font-semibold">Customer Database</h3>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {customers.map((c) => (
-              <div key={c.email} className="luxury-card text-sm">
+              <div key={c.email} className="soft-card text-sm">
                 <p className="font-medium">{c.name}</p>
                 <p className="text-muted">{c.email}</p>
                 <p className="text-muted">{c.phone}</p>

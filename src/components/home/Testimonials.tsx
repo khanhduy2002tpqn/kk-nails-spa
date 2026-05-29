@@ -21,7 +21,7 @@ export function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06 }}
-              className="luxury-card relative"
+              className="soft-card relative"
             >
               <Quote className="absolute right-4 top-4 h-8 w-8 text-pink-cream/40" />
               <div className="flex gap-0.5 text-pink-accent">

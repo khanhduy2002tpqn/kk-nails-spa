@@ -6,10 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:booking": "vitest run src/lib/booking-utils.test.ts",
+    "test:booking-api": "vitest run src/app/api/bookings/route.test.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.1",
+    "@vercel/analytics": "^2.0.1",
     "date-fns": "^4.2.1",
     "framer-motion": "^12.40.0",
     "lucide-react": "^1.16.0",
@@ -30,6 +34,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.7"
   }
 }

@@ -73,7 +73,7 @@ export async function seedSampleData() {
 
   await saveBooking({
     serviceId: "mani-gel",
-    serviceName: "Luxury Gel Manicure",
+    serviceName: "Signature Gel Manicure",
     technicianId: "kim",
     technicianName: "Kim",
     date: dateStr,

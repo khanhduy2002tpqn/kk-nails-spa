@@ -1,16 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { type FormEvent, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Moon, Sun } from "lucide-react";
+import { Menu, X, Moon, Sun, Search } from "lucide-react";
 import { NAV_LINKS } from "@/lib/constants";
+import { normalizeConfirmationId } from "@/lib/confirmation";
 import { Logo } from "@/components/ui/Logo";
 import { useTheme } from "@/components/providers/ThemeProvider";
 
 export function Navbar() {
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [confirmationId, setConfirmationId] = useState("");
   const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
@@ -18,6 +22,14 @@ export function Navbar() {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const findAppointment = (event: FormEvent) => {
+    event.preventDefault();
+    const id = normalizeConfirmationId(confirmationId);
+    if (!id) return;
+    setOpen(false);
+    router.push(`/manage?id=${encodeURIComponent(id)}`);
+  };
 
   return (
     <header
@@ -32,7 +44,7 @@ export function Navbar() {
           <Logo />
         </Link>
 
-        <ul className="hidden items-center gap-8 lg:flex">
+        <ul className="hidden items-center gap-6 lg:flex">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <Link
@@ -46,6 +58,22 @@ export function Navbar() {
         </ul>
 
         <div className="hidden items-center gap-3 lg:flex">
+          <form onSubmit={findAppointment} className="flex items-center rounded-full border border-pink-soft/70 bg-white/70 px-2 py-1 dark:border-white/10 dark:bg-white/5">
+            <input
+              value={confirmationId}
+              onChange={(e) => setConfirmationId(e.target.value)}
+              placeholder="Find ID"
+              aria-label="Find confirmation ID"
+              className="w-32 bg-transparent px-2 py-1.5 font-mono text-xs outline-none placeholder:font-sans placeholder:text-muted xl:w-40"
+            />
+            <button
+              type="submit"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-foreground/70 transition hover:bg-pink-blush hover:text-pink-accent dark:hover:bg-white/10"
+              aria-label="Find appointment"
+            >
+              <Search size={15} />
+            </button>
+          </form>
           <button
             type="button"
             onClick={toggleTheme}
@@ -100,6 +128,20 @@ export function Navbar() {
                 </li>
               ))}
               <li className="pt-2">
+                <form onSubmit={findAppointment} className="flex gap-2 px-3 pb-2">
+                  <input
+                    value={confirmationId}
+                    onChange={(e) => setConfirmationId(e.target.value)}
+                    placeholder="Find confirmation ID"
+                    aria-label="Find confirmation ID"
+                    className="input-field flex-1 font-mono text-sm"
+                  />
+                  <button type="submit" className="btn-outline shrink-0 px-4" aria-label="Find appointment">
+                    <Search size={18} />
+                  </button>
+                </form>
+              </li>
+              <li>
                 <Link href="/book" onClick={() => setOpen(false)} className="btn-primary block text-center">
                   Book Appointment
                 </Link>

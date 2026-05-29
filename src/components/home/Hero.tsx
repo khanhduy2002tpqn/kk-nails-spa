@@ -13,7 +13,7 @@ export function Hero() {
       <div className="absolute inset-0">
         <Image
           src={BRAND_IMAGES.hero}
-          alt="Luxury cream pink manicure at K&K Nails and Spa"
+          alt="Cream pink manicure at K&K Nails and Spa"
           fill
           priority
           className="object-cover object-center"
@@ -46,8 +46,8 @@ export function Hero() {
             {BRAND.tagline}
           </p>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted sm:text-xl">
-            Indulge in a sanctuary of elegance. From bespoke nail artistry to rejuvenating spa
-            rituals, every visit is crafted for your comfort and confidence.
+            Enjoy professional nail care, spa pedicures, waxing, and lash services in a clean,
+            friendly salon built around your comfort.
           </p>
 
           <div className="mt-10 flex flex-wrap gap-4">

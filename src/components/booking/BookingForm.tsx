@@ -13,6 +13,7 @@ import {
   User,
 } from "lucide-react";
 import { SERVICES, TECHNICIANS } from "@/lib/constants";
+import { formatConfirmationId } from "@/lib/confirmation";
 import type { Booking } from "@/types";
 import "react-day-picker/style.css";
 
@@ -104,11 +105,13 @@ export function BookingForm() {
   };
 
   if (booking && step === 4) {
+    const confirmationIdLines = formatConfirmationId(booking.id);
+
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="luxury-card mx-auto max-w-lg text-center"
+        className="soft-card mx-auto max-w-lg text-center"
       >
         <CheckCircle2 className="mx-auto h-16 w-16 text-pink-accent" />
         <h2 className="mt-4 font-display text-3xl font-bold">Appointment Confirmed!</h2>
@@ -134,8 +137,14 @@ export function BookingForm() {
           </div>
         </dl>
         <p className="mt-6 text-xs text-muted">
-          Need to cancel or reschedule? Call us or use your confirmation ID:{" "}
-          <span className="font-mono text-foreground">{booking.id.slice(0, 8)}</span>
+          Need to cancel or reschedule? Call us or use your confirmation ID:
+          <span className="mx-auto mt-2 block max-w-full overflow-x-auto rounded-lg border border-pink-soft/60 bg-white/60 px-3 py-2 font-mono text-sm leading-relaxed text-foreground dark:border-white/10 dark:bg-white/5">
+            {confirmationIdLines.map((line) => (
+              <span key={line} className="block whitespace-nowrap">
+                {line}
+              </span>
+            ))}
+          </span>
         </p>
       </motion.div>
     );
@@ -164,7 +173,7 @@ export function BookingForm() {
           initial={{ opacity: 0, x: 16 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -16 }}
-          className="luxury-card"
+          className="soft-card"
         >
           {step === 0 && (
             <div>

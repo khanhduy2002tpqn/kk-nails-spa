@@ -21,14 +21,14 @@ export function Contact() {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <div className="luxury-card flex gap-4">
+            <div className="soft-card flex gap-4">
               <MapPin className="shrink-0 text-pink-accent dark:text-pink-cream" size={22} />
               <div>
                 <h3 className="font-display text-lg font-bold">Address</h3>
                 <p className="mt-1 text-base text-muted">{BRAND.fullAddress}</p>
               </div>
             </div>
-            <div className="luxury-card flex gap-4">
+            <div className="soft-card flex gap-4">
               <Phone className="shrink-0 text-pink-accent dark:text-pink-cream" size={22} />
               <div>
                 <h3 className="font-display text-lg font-bold">Phone</h3>
@@ -40,7 +40,7 @@ export function Contact() {
                 </a>
               </div>
             </div>
-            <div className="luxury-card flex gap-4">
+            <div className="soft-card flex gap-4">
               <Mail className="shrink-0 text-pink-accent dark:text-pink-cream" size={22} />
               <div>
                 <h3 className="font-display text-lg font-bold">Email</h3>
@@ -52,7 +52,7 @@ export function Contact() {
                 </a>
               </div>
             </div>
-            <div className="luxury-card flex gap-4">
+            <div className="soft-card flex gap-4">
               <Clock className="shrink-0 text-pink-accent dark:text-pink-cream" size={22} />
               <div>
                 <h3 className="font-display text-lg font-bold">Business Hours</h3>

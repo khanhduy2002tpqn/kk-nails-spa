@@ -23,14 +23,14 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: {
-    default: `${BRAND.name} | Luxury Nails & Spa in Folcroft, PA`,
+    default: `${BRAND.name} | Nails & Spa in Folcroft, PA`,
     template: `%s | ${BRAND.name}`,
   },
   description:
-    "Premium nail salon and spa in Folcroft, Pennsylvania. Gel nails, acrylics, dip powder, waxing, lash extensions, and spa packages. Book online today.",
+    "Nail salon and spa in Folcroft, Pennsylvania. Gel nails, acrylics, dip powder, waxing, lash extensions, and spa packages. Book online today.",
   keywords: [
     "nail salon Folcroft PA",
-    "luxury nails near me",
+    "nails near me",
     "spa manicure pedicure",
     "gel nails Philadelphia",
     "K&K Nails and Spa",

@@ -23,8 +23,8 @@ export function Footer() {
           <div className="lg:col-span-1">
             <Logo />
             <p className="mt-4 max-w-xs text-base leading-relaxed text-muted">
-              Premium nail and spa services in Folcroft, Pennsylvania. Experience luxury,
-              hygiene, and artistry.
+              Nail and spa services in Folcroft, Pennsylvania with clean stations, friendly care,
+              and detailed artistry.
             </p>
             <div className="mt-6 flex gap-3">
               <a

@@ -1,8 +1,13 @@
 import { BRAND } from "./constants";
+import { formatConfirmationId } from "./confirmation";
 import type { Booking } from "@/types";
 
 export function buildConfirmationEmail(booking: Booking): { subject: string; html: string; text: string } {
   const subject = `Appointment Confirmed — ${BRAND.name}`;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://kk-nails-spa.vercel.app");
+  const manageUrl = `${appUrl}/manage?id=${booking.id}`;
+  const confirmationIdText = formatConfirmationId(booking.id).join("\n");
+  const confirmationIdHtml = formatConfirmationId(booking.id).join("<br />");
   const text = `
 Hello ${booking.customerName},
 
@@ -13,11 +18,13 @@ Technician: ${booking.technicianName}
 Date: ${booking.date}
 Time: ${booking.time}
 Duration: ${booking.duration} minutes
+Confirmation ID:
+${confirmationIdText}
 
 Location: ${BRAND.fullAddress}
 Phone: ${BRAND.phone}
 
-To cancel or reschedule, visit our website or call ${BRAND.phone}.
+To cancel or reschedule, use your confirmation ID at ${manageUrl} or call ${BRAND.phone}.
 
 Thank you for choosing ${BRAND.name}!
 ${BRAND.tagline}
@@ -55,20 +62,33 @@ ${BRAND.tagline}
           <td style="padding:8px 0; color:#6b7280;">Duration</td>
           <td style="padding:8px 0;"><strong>${booking.duration} minutes</strong></td>
         </tr>
+        <tr>
+          <td style="padding:8px 0; color:#6b7280;">Confirmation ID</td>
+          <td style="padding:8px 0;"><strong style="font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; line-height:1.6; white-space:nowrap;">${confirmationIdHtml}</strong></td>
+        </tr>
       </table>
 
-      <p style="margin:18px 0 0; font-size:13px; color:#6b7280;">If you need to cancel or reschedule, please reply to this email or visit our website and use your confirmation ID.</p>
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:24px auto 10px; border-collapse:separate;">
+        <tr>
+          <td bgcolor="#b68536" style="border-radius:8px; text-align:center;">
+            <a href="${manageUrl}" target="_blank" rel="noopener noreferrer"
+               style="display:block; padding:12px 20px; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; font-size:14px; font-weight:700; color:#ffffff; text-decoration:none; border-radius:8px;">
+              Manage booking
+            </a>
+          </td>
+        </tr>
+      </table>
+
+      <p style="margin:0 0 18px; text-align:center; font-size:12px; color:#6b7280;">
+        Link: <a href="${manageUrl}" target="_blank" rel="noopener noreferrer" style="color:#b68536; text-decoration:underline; word-break:break-all;">${manageUrl}</a>
+      </p>
+
+      <p style="margin:18px 0 0; font-size:13px; color:#6b7280;">If you need to cancel or reschedule, please reply to this email, call us, or use this confirmation ID on our website.</p>
     </div>
 
     <div style="padding:16px 32px; border-top:1px solid #f0e9e6; font-size:13px; color:#6b7280;">
       <div>${BRAND.fullAddress}</div>
       <div style="margin-top:6px">Phone: ${BRAND.phone}</div>
-    </div>
-    <div style="padding:20px 32px 36px; text-align:center; background:#f6f6f8;">
-      <a href="${process.env.NEXT_PUBLIC_APP_URL ?? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://kk-nails-spa.vercel.app')}/book?id=${booking.id}" 
-         style="display:inline-block; text-decoration:none; background:#b68536; color:white; padding:10px 18px; border-radius:8px; font-weight:600; font-size:14px;">
-        Manage booking
-      </a>
     </div>
   </div>
 </div>`.trim();

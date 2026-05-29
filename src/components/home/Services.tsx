@@ -48,7 +48,7 @@ export function Services() {
             className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
           >
             {filtered.map((service) => (
-              <article key={service.id} className="luxury-card group">
+              <article key={service.id} className="soft-card group">
                 <div className="flex items-start justify-between gap-4">
                   <h3 className="font-display text-lg font-bold group-hover:text-pink-accent dark:group-hover:text-pink-cream">
                     {service.name}

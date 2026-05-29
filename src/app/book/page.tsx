@@ -3,7 +3,7 @@ import { ManageBooking } from "@/components/booking/ManageBooking";
 
 export const metadata = {
   title: "Book Appointment",
-  description: "Schedule your luxury nail and spa appointment at K&K Nails and Spa in Folcroft, PA.",
+  description: "Schedule your nail and spa appointment at K&K Nails and Spa in Folcroft, PA.",
 };
 
 export default function BookPage() {
@@ -12,7 +12,7 @@ export default function BookPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="section-label">Online Booking</p>
-          <h1 className="section-title">Reserve Your Experience</h1>
+          <h1 className="section-title">Reserve Your Appointment</h1>
           <p className="mx-auto mt-4 max-w-xl text-lg text-muted">
             Select your service, choose your artist, and pick a time — we&apos;ll send a
             confirmation to your email instantly.
@@ -24,7 +24,7 @@ export default function BookPage() {
         </div>
 
         <div className="mt-16">
-          <ManageBooking />
+          <ManageBooking redirectOnLookup />
         </div>
       </div>
     </div>

@@ -1,10 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { normalizeConfirmationId } from "@/lib/confirmation";
 import type { Booking } from "@/types";
 
-export function ManageBooking() {
+interface ManageBookingProps {
+  redirectOnLookup?: boolean;
+}
+
+export function ManageBooking({ redirectOnLookup = false }: ManageBookingProps) {
+  const router = useRouter();
   const [bookingId, setBookingId] = useState("");
   const [booking, setBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(false);
@@ -13,7 +20,7 @@ export function ManageBooking() {
   const [newTime, setNewTime] = useState("");
 
   const lookup = async (idParam?: string) => {
-    const id = idParam ?? bookingId;
+    const id = normalizeConfirmationId(idParam ?? bookingId);
     if (!id) return;
     setLoading(true);
     setMessage("");
@@ -21,6 +28,10 @@ export function ManageBooking() {
       const res = await fetch(`/api/bookings/${id}`);
       if (!res.ok) throw new Error("Booking not found");
       const data = await res.json();
+      if (redirectOnLookup) {
+        router.push(`/manage?id=${encodeURIComponent(id)}`);
+        return;
+      }
       setBooking(data);
       setNewDate(data.date);
       setNewTime(data.time);
@@ -37,6 +48,7 @@ export function ManageBooking() {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (id) lookup(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -65,14 +77,14 @@ export function ManageBooking() {
   };
 
   return (
-    <div className="luxury-card mx-auto max-w-lg">
+    <div className="soft-card mx-auto max-w-lg">
       <h3 className="font-display text-lg font-semibold">Manage Your Appointment</h3>
       <p className="mt-1 text-sm text-muted">Enter your confirmation ID from your email</p>
       <div className="mt-4 flex gap-2">
         <input
           className="input-field flex-1 font-mono text-sm"
           value={bookingId}
-          onChange={(e) => setBookingId(e.target.value)}
+          onChange={(e) => setBookingId(e.target.value.trim())}
           placeholder="Confirmation ID"
         />
         <button type="button" onClick={() => lookup()} disabled={loading} className="btn-primary shrink-0">
