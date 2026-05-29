@@ -24,20 +24,24 @@ export async function POST(request: NextRequest) {
     }
 
     const data = parsed.data;
-    const service = SERVICES.find((s) => s.id === data.serviceId);
+    const serviceIds = data.serviceIds?.length ? data.serviceIds : data.serviceId ? [data.serviceId] : [];
+    const selectedServices = serviceIds
+      .map((id) => SERVICES.find((service) => service.id === id))
+      .filter((service): service is (typeof SERVICES)[number] => Boolean(service));
     const technician = await getTechnicianById(data.technicianId);
 
-    if (!service || !technician?.active) {
+    if (selectedServices.length !== serviceIds.length || !technician?.active) {
       return NextResponse.json({ error: "Invalid service or technician" }, { status: 400 });
     }
 
     const [bookings, blocked] = await Promise.all([getBookings(), getBlockedSlots()]);
+    const duration = selectedServices.reduce((total, service) => total + service.duration, 0);
 
     if (
       !isSlotAvailable(
         data.date,
         data.time,
-        service.duration,
+        duration,
         data.technicianId,
         bookings,
         blocked
@@ -50,13 +54,15 @@ export async function POST(request: NextRequest) {
     }
 
     const booking = await saveBooking({
-      serviceId: service.id,
-      serviceName: service.name,
+      serviceId: selectedServices[0].id,
+      serviceName: selectedServices.map((service) => service.name).join(", "),
+      serviceIds: selectedServices.map((service) => service.id),
+      serviceNames: selectedServices.map((service) => service.name),
       technicianId: technician.id,
       technicianName: technician.name,
       date: data.date,
       time: data.time,
-      duration: service.duration,
+      duration,
       customerName: data.customerName,
       customerPhone: data.customerPhone,
       customerEmail: data.customerEmail,

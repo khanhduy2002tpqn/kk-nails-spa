@@ -7,17 +7,25 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const date = searchParams.get("date");
   const serviceId = searchParams.get("serviceId");
+  const serviceIdsParam = searchParams.get("serviceIds");
   const technicianId = searchParams.get("technicianId");
+  const serviceIds = serviceIdsParam
+    ? serviceIdsParam.split(",").map((id) => id.trim()).filter(Boolean)
+    : serviceId
+      ? [serviceId]
+      : [];
 
-  if (!date || !serviceId || !technicianId) {
+  if (!date || serviceIds.length === 0 || !technicianId) {
     return NextResponse.json(
-      { error: "date, serviceId, and technicianId are required" },
+      { error: "date, serviceIds, and technicianId are required" },
       { status: 400 }
     );
   }
 
-  const service = SERVICES.find((s) => s.id === serviceId);
-  if (!service) {
+  const selectedServices = serviceIds
+    .map((id) => SERVICES.find((service) => service.id === id))
+    .filter((service): service is (typeof SERVICES)[number] => Boolean(service));
+  if (selectedServices.length !== serviceIds.length) {
     return NextResponse.json({ error: "Service not found" }, { status: 404 });
   }
 
@@ -27,7 +35,8 @@ export async function GET(request: NextRequest) {
   }
 
   const [bookings, blocked] = await Promise.all([getBookings(), getBlockedSlots()]);
-  const slots = getAvailableSlots(date, service.duration, technicianId, bookings, blocked);
+  const duration = selectedServices.reduce((total, service) => total + service.duration, 0);
+  const slots = getAvailableSlots(date, duration, technicianId, bookings, blocked);
 
-  return NextResponse.json({ date, slots, duration: service.duration });
+  return NextResponse.json({ date, slots, duration });
 }

@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 export const bookingSchema = z.object({
-  serviceId: z.string().min(1),
+  serviceId: z.string().min(1).optional(),
+  serviceIds: z.array(z.string().min(1)).min(1).max(10).optional(),
   technicianId: z.string().min(1),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   time: z.string().min(1),
@@ -9,6 +10,9 @@ export const bookingSchema = z.object({
   customerPhone: z.string().min(10).max(20),
   customerEmail: z.string().email(),
   notes: z.string().max(500).optional(),
+}).refine((data) => data.serviceId || data.serviceIds?.length, {
+  message: "Select at least one service",
+  path: ["serviceIds"],
 });
 
 export const rescheduleSchema = z.object({

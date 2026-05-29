@@ -32,6 +32,8 @@ export interface Booking {
   id: string;
   serviceId: string;
   serviceName: string;
+  serviceIds?: string[];
+  serviceNames?: string[];
   technicianId: string;
   technicianName: string;
   date: string;

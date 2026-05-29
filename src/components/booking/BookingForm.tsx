@@ -21,7 +21,7 @@ const STEPS = ["Service", "Technician", "Date & Time", "Your Info", "Confirm"];
 
 export function BookingForm() {
   const [step, setStep] = useState(0);
-  const [serviceId, setServiceId] = useState("");
+  const [serviceIds, setServiceIds] = useState<string[]>([]);
   const [technicianId, setTechnicianId] = useState("");
   const [date, setDate] = useState<Date | undefined>();
   const [time, setTime] = useState("");
@@ -38,7 +38,11 @@ export function BookingForm() {
     notes: "",
   });
 
-  const service = SERVICES.find((s) => s.id === serviceId);
+  const selectedServices = serviceIds
+    .map((id) => SERVICES.find((service) => service.id === id))
+    .filter((service): service is (typeof SERVICES)[number] => Boolean(service));
+  const totalDuration = selectedServices.reduce((total, service) => total + service.duration, 0);
+  const totalPrice = selectedServices.reduce((total, service) => total + service.price, 0);
   const technician = technicians.find((t) => t.id === technicianId);
   const dateStr = date ? format(date, "yyyy-MM-dd") : "";
 
@@ -57,12 +61,12 @@ export function BookingForm() {
   }, []);
 
   const fetchSlots = useCallback(async () => {
-    if (!dateStr || !serviceId || !technicianId) return;
+    if (!dateStr || serviceIds.length === 0 || !technicianId) return;
     setLoadingSlots(true);
     setError("");
     try {
       const res = await fetch(
-        `/api/availability?date=${dateStr}&serviceId=${serviceId}&technicianId=${technicianId}`
+        `/api/availability?date=${dateStr}&serviceIds=${serviceIds.join(",")}&technicianId=${technicianId}`
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -74,14 +78,14 @@ export function BookingForm() {
     } finally {
       setLoadingSlots(false);
     }
-  }, [dateStr, serviceId, technicianId, time]);
+  }, [dateStr, serviceIds, technicianId, time]);
 
   useEffect(() => {
     if (step >= 2) fetchSlots();
   }, [step, fetchSlots]);
 
   const canNext = () => {
-    if (step === 0) return !!serviceId;
+    if (step === 0) return serviceIds.length > 0;
     if (step === 1) return !!technicianId;
     if (step === 2) return !!date && !!time;
     if (step === 3)
@@ -93,6 +97,15 @@ export function BookingForm() {
     return true;
   };
 
+  const toggleService = (id: string) => {
+    setServiceIds((current) =>
+      current.includes(id)
+        ? current.filter((serviceId) => serviceId !== id)
+        : [...current, id]
+    );
+    setTime("");
+  };
+
   const handleSubmit = async () => {
     setSubmitting(true);
     setError("");
@@ -101,7 +114,8 @@ export function BookingForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          serviceId,
+          serviceId: serviceIds[0],
+          serviceIds,
           technicianId,
           date: dateStr,
           time,
@@ -192,26 +206,42 @@ export function BookingForm() {
         >
           {step === 0 && (
             <div>
-              <h3 className="font-display text-xl font-bold">Select Your Service</h3>
+              <h3 className="font-display text-xl font-bold">Select Your Services</h3>
               <div className="mt-4 max-h-80 space-y-2 overflow-y-auto pr-1">
                 {SERVICES.map((s) => (
                   <button
                     key={s.id}
                     type="button"
-                    onClick={() => setServiceId(s.id)}
+                    onClick={() => toggleService(s.id)}
                     className={`flex w-full items-center justify-between rounded-xl border-2 px-4 py-3.5 text-left text-base transition-all duration-300 ease-out ${
-                      serviceId === s.id
+                      serviceIds.includes(s.id)
                         ? "scale-[1.01] border-pink-accent bg-pink-blush shadow-md shadow-pink-cream/25"
                         : "border-pink-soft/60 bg-cream/40 hover:-translate-y-0.5 hover:border-pink-accent hover:bg-pink-blush hover:shadow-md hover:shadow-pink-cream/20 dark:border-white/10"
                     }`}
                   >
-                    <span>{s.name}</span>
+                    <span className="flex items-center gap-3">
+                      <span
+                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border text-xs ${
+                          serviceIds.includes(s.id)
+                            ? "border-pink-accent bg-pink-accent text-white"
+                            : "border-pink-soft bg-white/60 dark:bg-white/5"
+                        }`}
+                      >
+                        {serviceIds.includes(s.id) ? "✓" : ""}
+                      </span>
+                      {s.name}
+                    </span>
                     <span className="shrink-0 text-xs text-muted">
                       {s.duration}m · {s.priceLabel ?? `$${s.price}`}
                     </span>
                   </button>
                 ))}
               </div>
+              {selectedServices.length > 0 && (
+                <p className="mt-4 rounded-lg bg-pink-blush px-3 py-2 text-sm text-muted dark:bg-white/5">
+                  {selectedServices.length} service(s) selected · {totalDuration} minutes · ${totalPrice}+
+                </p>
+              )}
             </div>
           )}
 
@@ -271,6 +301,10 @@ export function BookingForm() {
           {step === 2 && (
             <div>
               <h3 className="font-display text-xl font-bold">Pick Date & Time</h3>
+              <p className="mt-1 text-sm text-muted">
+                Checking {technician?.name}&apos;s availability for {totalDuration} minutes.
+                Available time slots only appear when the technician is free for the full service time.
+              </p>
               <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:justify-center">
                 <DayPicker
                   mode="single"
@@ -398,9 +432,9 @@ export function BookingForm() {
         )}
       </div>
 
-      {step >= 1 && service && technician && (
+      {step >= 1 && selectedServices.length > 0 && technician && (
         <p className="mt-4 text-center text-xs text-muted">
-          {service.name} with {technician.name}
+          {selectedServices.map((service) => service.name).join(", ")} with {technician.name} · {totalDuration}m
           {date && time ? ` · ${format(date, "MMM d")} at ${time}` : ""}
         </p>
       )}
