@@ -126,7 +126,7 @@ export function AdminDashboard() {
 
   const cancelBooking = async (id: string) => {
     if (!isAdministrator) return;
-    await fetch(`/api/bookings/${id}`, { method: "DELETE" });
+    await fetch(`/api/bookings/${id}`, { method: "DELETE", headers: staffHeaders() });
     loadData();
   };
 

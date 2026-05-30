@@ -1,6 +1,25 @@
 import { format, parse, isSunday, isSaturday } from "date-fns";
-import { BOOKING_HOURS, SLOT_INTERVAL_MINUTES } from "./constants";
+import { BOOKING_HOURS, SHOP_TIME_ZONE, SLOT_INTERVAL_MINUTES } from "./constants";
 import type { BlockedSlot, Booking } from "@/types";
+
+function getShopNow(): { date: string; minutes: number } {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: SHOP_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    hourCycle: "h23",
+  }).formatToParts(new Date());
+  const value = (type: string) => parts.find((part) => part.type === type)?.value ?? "0";
+
+  return {
+    date: `${value("year")}-${value("month")}-${value("day")}`,
+    minutes: Number(value("hour")) * 60 + Number(value("minute")),
+  };
+}
 
 export function getDayHours(date: Date): { open: number; close: number } {
   if (isSunday(date)) return BOOKING_HOURS.sunday;
@@ -89,7 +108,12 @@ export function getAvailableSlots(
   blocked: BlockedSlot[]
 ): string[] {
   const dateObj = parse(date, "yyyy-MM-dd", new Date());
+  const shopNow = getShopNow();
+
+  if (date < shopNow.date) return [];
+
   return generateTimeSlots(dateObj).filter((time) =>
+    (date !== shopNow.date || timeToMinutes(time, dateObj) >= shopNow.minutes) &&
     isSlotAvailable(date, time, duration, technicianId, bookings, blocked)
   );
 }

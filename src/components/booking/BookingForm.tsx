@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
-import { format, addDays, isBefore, startOfToday } from "date-fns";
+import { format, addDays, isBefore } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Calendar,
@@ -12,12 +12,24 @@ import {
   Loader2,
   User,
 } from "lucide-react";
-import { SERVICES } from "@/lib/constants";
+import { SERVICES, SHOP_TIME_ZONE } from "@/lib/constants";
 import { formatConfirmationId } from "@/lib/confirmation";
 import type { Booking, Technician } from "@/types";
 import "react-day-picker/style.css";
 
 const STEPS = ["Service", "Technician", "Date & Time", "Your Info", "Confirm"];
+
+function getShopToday(): Date {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: SHOP_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const value = (type: string) => parts.find((part) => part.type === type)?.value ?? "1";
+
+  return new Date(Number(value("year")), Number(value("month")) - 1, Number(value("day")));
+}
 
 export function BookingForm() {
   const [step, setStep] = useState(0);
@@ -41,10 +53,10 @@ export function BookingForm() {
   const selectedServices = serviceIds
     .map((id) => SERVICES.find((service) => service.id === id))
     .filter((service): service is (typeof SERVICES)[number] => Boolean(service));
-  const totalDuration = selectedServices.reduce((total, service) => total + service.duration, 0);
   const totalPrice = selectedServices.reduce((total, service) => total + service.price, 0);
   const technician = technicians.find((t) => t.id === technicianId);
   const dateStr = date ? format(date, "yyyy-MM-dd") : "";
+  const shopToday = getShopToday();
 
   useEffect(() => {
     const loadTechnicians = async () => {
@@ -231,15 +243,13 @@ export function BookingForm() {
                       </span>
                       {s.name}
                     </span>
-                    <span className="shrink-0 text-xs text-muted">
-                      {s.duration}m · {s.priceLabel ?? `$${s.price}`}
-                    </span>
+                    <span className="shrink-0 text-xs text-muted">{s.priceLabel ?? `$${s.price}`}</span>
                   </button>
                 ))}
               </div>
               {selectedServices.length > 0 && (
                 <p className="mt-4 rounded-lg bg-pink-blush px-3 py-2 text-sm text-muted dark:bg-white/5">
-                  {selectedServices.length} service(s) selected · {totalDuration} minutes · ${totalPrice}+
+                  {selectedServices.length} service(s) selected · ${totalPrice}+
                 </p>
               )}
             </div>
@@ -302,15 +312,14 @@ export function BookingForm() {
             <div>
               <h3 className="font-display text-xl font-bold">Pick Date & Time</h3>
               <p className="mt-1 text-sm text-muted">
-                Checking {technician?.name}&apos;s availability for {totalDuration} minutes.
-                Available time slots only appear when the technician is free for the full service time.
+                Checking {technician?.name}&apos;s availability. Available time slots only appear when the technician is free.
               </p>
               <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:justify-center">
                 <DayPicker
                   mode="single"
                   selected={date}
                   onSelect={setDate}
-                  disabled={(d) => isBefore(d, startOfToday()) || isBefore(addDays(startOfToday(), 60), d)}
+                  disabled={(d) => isBefore(d, shopToday) || isBefore(addDays(shopToday, 60), d)}
                   className="mx-auto rounded-xl border border-pink-soft/40 p-3 dark:border-white/10"
                 />
                 <div className="flex-1">
@@ -434,7 +443,7 @@ export function BookingForm() {
 
       {step >= 1 && selectedServices.length > 0 && technician && (
         <p className="mt-4 text-center text-xs text-muted">
-          {selectedServices.map((service) => service.name).join(", ")} with {technician.name} · {totalDuration}m
+          {selectedServices.map((service) => service.name).join(", ")} with {technician.name}
           {date && time ? ` · ${format(date, "MMM d")} at ${time}` : ""}
         </p>
       )}

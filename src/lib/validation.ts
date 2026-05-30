@@ -19,6 +19,7 @@ export const rescheduleSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   time: z.string().min(1).optional(),
   status: z.enum(["confirmed", "cancelled", "completed"]).optional(),
+  contact: z.string().trim().min(3).max(100).optional(),
 });
 
 export const blockedSlotSchema = z.object({

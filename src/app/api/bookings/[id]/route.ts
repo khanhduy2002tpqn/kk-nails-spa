@@ -1,16 +1,58 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SERVICES, TECHNICIANS } from "@/lib/constants";
 import { isSlotAvailable } from "@/lib/booking-utils";
+import { sendConfirmationEmail } from "@/lib/email";
 import { getBlockedSlots, getBookingById, getBookings, updateBooking } from "@/lib/store";
+import { verifyStaffToken } from "@/lib/staff-auth";
 import { rescheduleSchema } from "@/lib/validation";
+import type { Booking } from "@/types";
+
+function normalizePhone(value: string): string {
+  return value.replace(/\D/g, "");
+}
+
+function phoneMatches(input: string, stored: string): boolean {
+  const inputDigits = normalizePhone(input);
+  const storedDigits = normalizePhone(stored);
+  if (inputDigits.length < 10 || storedDigits.length < 10) return false;
+  return inputDigits.slice(-10) === storedDigits.slice(-10);
+}
+
+function contactMatches(booking: Booking, contact: string | null | undefined): boolean {
+  const value = contact?.trim();
+  if (!value) return false;
+
+  const emailMatches = value.toLowerCase() === booking.customerEmail.trim().toLowerCase();
+  return emailMatches || phoneMatches(value, booking.customerPhone);
+}
+
+function canManageAsStaff(request: NextRequest): boolean {
+  const token = verifyStaffToken(request.headers.get("x-staff-token"));
+  return token?.role === "administrator";
+}
+
+async function readJsonBody(request: NextRequest): Promise<Record<string, unknown>> {
+  try {
+    const body = await request.json();
+    return body && typeof body === "object" ? (body as Record<string, unknown>) : {};
+  } catch {
+    return {};
+  }
+}
+
+function unauthorizedResponse() {
+  return NextResponse.json({ error: "Not found" }, { status: 404 });
+}
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
   const booking = await getBookingById(id);
   if (!booking) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!canManageAsStaff(request) && !contactMatches(booking, request.nextUrl.searchParams.get("contact"))) {
+    return unauthorizedResponse();
+  }
   return NextResponse.json(booking);
 }
 
@@ -29,7 +71,11 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid data" }, { status: 400 });
     }
 
-    const { date, time, status } = parsed.data;
+    const { date, time, status, contact } = parsed.data;
+
+    if (!canManageAsStaff(request) && !contactMatches(existing, contact)) {
+      return unauthorizedResponse();
+    }
 
     if (status === "cancelled") {
       const updated = await updateBooking(id, { status: "cancelled" });
@@ -63,6 +109,10 @@ export async function PATCH(
       ...(status && { status }),
     });
 
+    if (updated && (date || time) && updated.status === "confirmed") {
+      await sendConfirmationEmail(updated);
+    }
+
     return NextResponse.json(updated);
   } catch {
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
@@ -70,10 +120,19 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
+  const existing = await getBookingById(id);
+  if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  const body = await readJsonBody(request);
+  const contact = typeof body.contact === "string" ? body.contact : request.nextUrl.searchParams.get("contact");
+  if (!canManageAsStaff(request) && !contactMatches(existing, contact)) {
+    return unauthorizedResponse();
+  }
+
   const updated = await updateBooking(id, { status: "cancelled" });
   if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json(updated);

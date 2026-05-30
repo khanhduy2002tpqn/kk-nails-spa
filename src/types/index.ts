@@ -13,7 +13,6 @@ export interface Service {
   id: string;
   name: string;
   category: ServiceCategory;
-  duration: number;
   price: number;
   priceLabel?: string;
   description?: string;

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SERVICES } from "@/lib/constants";
+import { BOOKING_SLOT_MINUTES, SERVICES } from "@/lib/constants";
 import { getAvailableSlots } from "@/lib/booking-utils";
 import { getBlockedSlots, getBookings, getTechnicianById } from "@/lib/store";
 
@@ -35,8 +35,7 @@ export async function GET(request: NextRequest) {
   }
 
   const [bookings, blocked] = await Promise.all([getBookings(), getBlockedSlots()]);
-  const duration = selectedServices.reduce((total, service) => total + service.duration, 0);
-  const slots = getAvailableSlots(date, duration, technicianId, bookings, blocked);
+  const slots = getAvailableSlots(date, BOOKING_SLOT_MINUTES, technicianId, bookings, blocked);
 
-  return NextResponse.json({ date, slots, duration });
+  return NextResponse.json({ date, slots, duration: BOOKING_SLOT_MINUTES });
 }

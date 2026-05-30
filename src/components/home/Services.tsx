@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { Clock, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { SERVICE_CATEGORIES, SERVICES } from "@/lib/constants";
 
 export function Services() {
@@ -17,7 +17,7 @@ export function Services() {
           <p className="section-label">Services & Pricing</p>
           <h2 className="section-title">Curated Beauty Menu</h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted">
-            Transparent pricing, professional service, and durations listed so you can plan your perfect visit.
+            Transparent pricing and professional service so you can plan your visit.
           </p>
         </div>
 
@@ -56,10 +56,6 @@ export function Services() {
                   <span className="shrink-0 font-display text-xl font-bold text-pink-accent dark:text-pink-cream">
                     {service.priceLabel ?? `$${service.price}`}
                   </span>
-                </div>
-                <div className="mt-3 flex items-center gap-1.5 text-sm text-muted sm:text-base">
-                  <Clock size={14} />
-                  <span>{service.duration} mins</span>
                 </div>
               </article>
             ))}

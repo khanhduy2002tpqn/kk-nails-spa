@@ -3,8 +3,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 vi.mock("@/lib/store", () => ({
   getBookings: vi.fn(),
   getBlockedSlots: vi.fn(),
+  getTechnicianById: vi.fn(),
   saveBooking: vi.fn(),
-  seedSampleData: vi.fn(),
 }));
 
 vi.mock("@/lib/email", () => ({
@@ -12,8 +12,8 @@ vi.mock("@/lib/email", () => ({
 }));
 
 import { GET, POST } from "./route";
-import type { Booking, BlockedSlot } from "@/types";
-import { getBookings, getBlockedSlots, saveBooking, seedSampleData } from "@/lib/store";
+import type { Booking } from "@/types";
+import { getBookings, getBlockedSlots, getTechnicianById, saveBooking } from "@/lib/store";
 import { sendConfirmationEmail } from "@/lib/email";
 
 const mockBooking: Booking = {
@@ -36,8 +36,8 @@ const mockBooking: Booking = {
 
 const mockedGetBookings = vi.mocked(getBookings);
 const mockedGetBlockedSlots = vi.mocked(getBlockedSlots);
+const mockedGetTechnicianById = vi.mocked(getTechnicianById);
 const mockedSaveBooking = vi.mocked(saveBooking);
-const mockedSeedSampleData = vi.mocked(seedSampleData);
 const mockedSendConfirmationEmail = vi.mocked(sendConfirmationEmail);
 
 describe("API /bookings route", () => {
@@ -49,15 +49,12 @@ describe("API /bookings route", () => {
     vi.restoreAllMocks();
   });
 
-  it("GET returns the current bookings after seeding sample data", async () => {
-    mockedSeedSampleData.mockResolvedValue(undefined);
-    mockedGetBookings.mockResolvedValue([mockBooking]);
-
+  it("GET is not exposed publicly", async () => {
     const response = await GET();
-    expect(response.status).toBe(200);
-    expect(await response.json()).toEqual([mockBooking]);
-    expect(mockedSeedSampleData).toHaveBeenCalled();
-    expect(mockedGetBookings).toHaveBeenCalled();
+    expect(response.status).toBe(405);
+    const body = await response.json();
+    expect(body.error).toContain("/api/admin/bookings");
+    expect(mockedGetBookings).not.toHaveBeenCalled();
   });
 
   it("POST returns 400 for invalid booking payload", async () => {
@@ -74,6 +71,14 @@ describe("API /bookings route", () => {
   });
 
   it("POST returns 400 for invalid service or technician", async () => {
+    mockedGetTechnicianById.mockResolvedValue({
+      id: "kim",
+      name: "Kim",
+      title: "Lead Nail Artist",
+      specialties: ["Gel"],
+      active: true,
+    });
+
     const payload = {
       serviceId: "invalid-service",
       technicianId: "kim",
@@ -97,6 +102,13 @@ describe("API /bookings route", () => {
   });
 
   it("POST returns 409 when the requested slot is no longer available", async () => {
+    mockedGetTechnicianById.mockResolvedValue({
+      id: "kim",
+      name: "Kim",
+      title: "Lead Nail Artist",
+      specialties: ["Gel"],
+      active: true,
+    });
     mockedGetBookings.mockResolvedValue([mockBooking]);
     mockedGetBlockedSlots.mockResolvedValue([]);
 
@@ -124,6 +136,13 @@ describe("API /bookings route", () => {
   });
 
   it("POST successfully creates a booking and sends a confirmation email", async () => {
+    mockedGetTechnicianById.mockResolvedValue({
+      id: "kim",
+      name: "Kim",
+      title: "Lead Nail Artist",
+      specialties: ["Gel"],
+      active: true,
+    });
     mockedGetBookings.mockResolvedValue([]);
     mockedGetBlockedSlots.mockResolvedValue([]);
     mockedSaveBooking.mockResolvedValue(mockBooking);

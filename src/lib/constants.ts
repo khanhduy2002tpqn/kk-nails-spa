@@ -30,33 +30,35 @@ export const BOOKING_HOURS = {
   sunday: { open: 10, close: 17 },
 };
 
+export const SHOP_TIME_ZONE = "America/New_York";
 export const SLOT_INTERVAL_MINUTES = 30;
+export const BOOKING_SLOT_MINUTES = 30;
 
 export const SERVICES: Service[] = [
-  { id: "mani-classic", name: "Classic Manicure", category: "manicure", duration: 30, price: 20 },
-  { id: "mani-spa", name: "Spa Manicure", category: "manicure", duration: 45, price: 30 },
-  { id: "mani-gel", name: "Signature Gel Manicure", category: "gel", duration: 45, price: 45 },
-  { id: "mani-gel-french", name: "Gel French Manicure", category: "gel", duration: 50, price: 40 },
-  { id: "pedi-classic", name: "Classic Pedicure", category: "pedicure", duration: 45, price: 35 },
-  { id: "pedi-spa", name: "Spa Pedicure", category: "pedicure", duration: 60, price: 45 },
-  { id: "pedi-gel", name: "Gel Color Pedicure", category: "pedicure", duration: 55, price: 45 },
-  { id: "pedi-gel-french", name: "Gel French Pedicure", category: "pedicure", duration: 60, price: 50 },
-  { id: "acrylic-full", name: "Acrylic Full Set", category: "acrylic", duration: 90, price: 40, priceLabel: "$40 & up" },
-  { id: "acrylic-refill", name: "Acrylic Refill", category: "acrylic", duration: 60, price: 30, priceLabel: "$30 & up" },
-  { id: "acrylic-gel", name: "Acrylic with Gel", category: "acrylic", duration: 100, price: 50, priceLabel: "$50 & up" },
-  { id: "dip-mani", name: "Dip Powder with Mani", category: "dip", duration: 60, price: 50, priceLabel: "$50 & up" },
-  { id: "dip-french", name: "Dip Powder French", category: "dip", duration: 70, price: 60, priceLabel: "$60 & up" },
-  { id: "gel-liquid", name: "Liquid Gel Full Set", category: "gel", duration: 90, price: 60, priceLabel: "$60 & up" },
-  { id: "nail-art-design", name: "Nail Art & Design", category: "nail-art", duration: 30, price: 15, priceLabel: "$5 & up" },
-  { id: "wax-brows", name: "Eyebrow Wax", category: "waxing", duration: 15, price: 8 },
-  { id: "wax-lip", name: "Upper Lip Wax", category: "waxing", duration: 10, price: 7 },
-  { id: "wax-full-face", name: "Full Face Wax", category: "waxing", duration: 45, price: 40, priceLabel: "$40 & up" },
-  { id: "wax-brazilian", name: "Brazilian Wax", category: "waxing", duration: 45, price: 55, priceLabel: "$55 & up" },
-  { id: "lash-stripe", name: "Stripe Lashes", category: "eyelash", duration: 30, price: 20 },
-  { id: "lash-individual", name: "Individual Lashes (Natural)", category: "eyelash", duration: 90, price: 35 },
-  { id: "lash-thick", name: "Individual Lashes (Thick)", category: "eyelash", duration: 120, price: 60 },
-  { id: "spa-duo", name: "Mani + Pedi Spa Package", category: "spa", duration: 90, price: 70 },
-  { id: "spa-relaxation", name: "Relaxation Spa Package", category: "spa", duration: 120, price: 95 },
+  { id: "mani-classic", name: "Classic Manicure", category: "manicure", price: 20 },
+  { id: "mani-spa", name: "Spa Manicure", category: "manicure", price: 30 },
+  { id: "mani-gel", name: "Signature Gel Manicure", category: "gel", price: 45 },
+  { id: "mani-gel-french", name: "Gel French Manicure", category: "gel", price: 40 },
+  { id: "pedi-classic", name: "Classic Pedicure", category: "pedicure", price: 35 },
+  { id: "pedi-spa", name: "Spa Pedicure", category: "pedicure", price: 45 },
+  { id: "pedi-gel", name: "Gel Color Pedicure", category: "pedicure", price: 45 },
+  { id: "pedi-gel-french", name: "Gel French Pedicure", category: "pedicure", price: 50 },
+  { id: "acrylic-full", name: "Acrylic Full Set", category: "acrylic", price: 40, priceLabel: "$40 & up" },
+  { id: "acrylic-refill", name: "Acrylic Refill", category: "acrylic", price: 30, priceLabel: "$30 & up" },
+  { id: "acrylic-gel", name: "Acrylic with Gel", category: "acrylic", price: 50, priceLabel: "$50 & up" },
+  { id: "dip-mani", name: "Dip Powder with Mani", category: "dip", price: 50, priceLabel: "$50 & up" },
+  { id: "dip-french", name: "Dip Powder French", category: "dip", price: 60, priceLabel: "$60 & up" },
+  { id: "gel-liquid", name: "Liquid Gel Full Set", category: "gel", price: 60, priceLabel: "$60 & up" },
+  { id: "nail-art-design", name: "Nail Art & Design", category: "nail-art", price: 15, priceLabel: "$5 & up" },
+  { id: "wax-brows", name: "Eyebrow Wax", category: "waxing", price: 8 },
+  { id: "wax-lip", name: "Upper Lip Wax", category: "waxing", price: 7 },
+  { id: "wax-full-face", name: "Full Face Wax", category: "waxing", price: 40, priceLabel: "$40 & up" },
+  { id: "wax-brazilian", name: "Brazilian Wax", category: "waxing", price: 55, priceLabel: "$55 & up" },
+  { id: "lash-stripe", name: "Stripe Lashes", category: "eyelash", price: 20 },
+  { id: "lash-individual", name: "Individual Lashes (Natural)", category: "eyelash", price: 35 },
+  { id: "lash-thick", name: "Individual Lashes (Thick)", category: "eyelash", price: 60 },
+  { id: "spa-duo", name: "Mani + Pedi Spa Package", category: "spa", price: 70 },
+  { id: "spa-relaxation", name: "Relaxation Spa Package", category: "spa", price: 95 },
 ];
 
 export const SERVICE_CATEGORIES: { id: string; label: string }[] = [
@@ -139,3 +141,4 @@ export const NAV_LINKS = [
 ];
 
 export { INSTAGRAM_IMAGES as INSTAGRAM_PLACEHOLDER } from "./images";
+

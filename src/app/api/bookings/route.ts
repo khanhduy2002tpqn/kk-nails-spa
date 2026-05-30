@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SERVICES } from "@/lib/constants";
+import { BOOKING_SLOT_MINUTES, SERVICES } from "@/lib/constants";
 import { isSlotAvailable } from "@/lib/booking-utils";
-import { sendConfirmationEmail } from "@/lib/email";
-import { getBlockedSlots, getBookings, getTechnicianById, saveBooking, seedSampleData } from "@/lib/store";
+import { sendConfirmationEmail, sendOwnerBookingEmail } from "@/lib/email";
+import { getBlockedSlots, getBookings, getTechnicianById, saveBooking } from "@/lib/store";
 import { bookingSchema } from "@/lib/validation";
 
 export async function GET() {
-  await seedSampleData();
-  const bookings = await getBookings();
-  return NextResponse.json(bookings);
+  return NextResponse.json({ error: "Use /api/admin/bookings with staff authentication." }, { status: 405 });
 }
 
 export async function POST(request: NextRequest) {
@@ -35,13 +33,12 @@ export async function POST(request: NextRequest) {
     }
 
     const [bookings, blocked] = await Promise.all([getBookings(), getBlockedSlots()]);
-    const duration = selectedServices.reduce((total, service) => total + service.duration, 0);
 
     if (
       !isSlotAvailable(
         data.date,
         data.time,
-        duration,
+        BOOKING_SLOT_MINUTES,
         data.technicianId,
         bookings,
         blocked
@@ -62,7 +59,7 @@ export async function POST(request: NextRequest) {
       technicianName: technician.name,
       date: data.date,
       time: data.time,
-      duration,
+      duration: BOOKING_SLOT_MINUTES,
       customerName: data.customerName,
       customerPhone: data.customerPhone,
       customerEmail: data.customerEmail,
@@ -70,7 +67,10 @@ export async function POST(request: NextRequest) {
       status: "confirmed",
     });
 
-    await sendConfirmationEmail(booking);
+    await Promise.all([
+      sendConfirmationEmail(booking),
+      sendOwnerBookingEmail(booking),
+    ]);
 
     return NextResponse.json(booking, { status: 201 });
   } catch {
