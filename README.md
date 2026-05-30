@@ -52,6 +52,7 @@ ADMIN_PASSWORD=your-secure-password
 ADMIN_SECRET=your-secure-admin-api-key
 RESEND_API_KEY=          # Optional — sends real confirmation emails
 RESEND_FROM_EMAIL=
+OWNER_BOOKING_EMAIL=    # Optional — sends new-booking notifications to the owner
 MONGODB_URI=            # Required for MongoDB persistence
 ```
 

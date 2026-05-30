@@ -32,6 +32,7 @@ ADMIN_SECRET=your-secure-key
 MONGODB_URI=mongodb+srv://<user>:<password>@cluster.example.net/kk-nails-spa
 RESEND_API_KEY=          # Optional for real email delivery
 RESEND_FROM_EMAIL=
+OWNER_BOOKING_EMAIL=    # Optional new-booking notification recipient
 ```
 
 5. Run the app locally:

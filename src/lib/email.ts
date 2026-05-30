@@ -2,8 +2,6 @@ import { BRAND } from "./constants";
 import { formatConfirmationId } from "./confirmation";
 import type { Booking } from "@/types";
 
-const OWNER_BOOKING_EMAIL = "Hoanghoanh1502@gmail.com";
-
 async function sendEmail(to: string, subject: string, html: string, text: string): Promise<boolean> {
   if (process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL) {
     try {
@@ -168,6 +166,9 @@ Notes: ${notes}
 }
 
 export async function sendOwnerBookingEmail(booking: Booking): Promise<boolean> {
+  const ownerEmail = process.env.OWNER_BOOKING_EMAIL;
+  if (!ownerEmail) return true;
+
   const { subject, html, text } = buildOwnerBookingEmail(booking);
-  return sendEmail(OWNER_BOOKING_EMAIL, subject, html, text);
+  return sendEmail(ownerEmail, subject, html, text);
 }
