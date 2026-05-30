@@ -1,4 +1,4 @@
-import type { GalleryItem, Service, Technician, Testimonial } from "@/types";
+import type { GalleryItem, Service, Technician } from "@/types";
 import { GALLERY_IMAGE_PATHS } from "./images";
 
 export const BRAND = {
@@ -6,7 +6,7 @@ export const BRAND = {
   tagline: "Nails & Spa Care in Folcroft",
   phone: "610-586-7078",
   phoneRaw: "6105867078",
-  email: "hello@kknailsandspa.com",
+  email: "hello@kknailsandspa.us",
   address: "1860 Delmar Drive",
   city: "Folcroft",
   state: "PA",
@@ -14,7 +14,8 @@ export const BRAND = {
   fullAddress: "1860 Delmar Drive, Folcroft, PA 19032",
   mapsEmbed:
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3058.2!2d-75.28!3d39.89!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMznCsDUzJzI0LjAiTiA3NcKwMTYnNDguMCJX!5e0!3m2!1sen!2sus!4v1",
-  instagram: "https://instagram.com",
+  instagram: "https://www.instagram.com/kk_nailsand_spa",
+  instagramHandle: "@kk_nailsand_spa",
   facebook: "https://facebook.com",
   hoursDisplay: [
     { days: "Monday – Friday", time: "10:00 AM – 7:00 PM" },
@@ -80,49 +81,6 @@ export const TECHNICIANS: Technician[] = [
   { id: "mia", name: "Mia", title: "Junior Technician", specialties: ["Manicure", "Pedicure"], active: true },
 ];
 
-export const TESTIMONIALS: Testimonial[] = [
-  {
-    id: "1",
-    name: "Jessica M.",
-    rating: 5,
-    text: "One of the best nail visits I've had in the Philadelphia area. Immaculate salon, stunning nail art, and the staff made me feel welcome.",
-    service: "Gel Manicure & Nail Art",
-    date: "March 2026",
-  },
-  {
-    id: "2",
-    name: "Amanda R.",
-    rating: 5,
-    text: "I've been coming to K&K for over a year. Always clean, always on time, and my acrylics last weeks. Booking online is so convenient!",
-    service: "Acrylic Full Set",
-    date: "February 2026",
-  },
-  {
-    id: "3",
-    name: "Taylor S.",
-    rating: 5,
-    text: "Their spa pedicure is pure heaven. The massage, the scents, the attention to detail — I leave feeling completely renewed every visit.",
-    service: "Spa Pedicure",
-    date: "January 2026",
-  },
-  {
-    id: "4",
-    name: "Nicole H.",
-    rating: 5,
-    text: "Sophia did my lash extensions and they look incredibly natural. Professional, gentle, and the results are gorgeous. Highly recommend!",
-    service: "Individual Lashes",
-    date: "December 2025",
-  },
-  {
-    id: "5",
-    name: "Brittany L.",
-    rating: 5,
-    text: "Brought my daughter for kids manicure — they were so patient and sweet with her. Beautiful salon atmosphere. We'll definitely be back!",
-    service: "Kids Manicure",
-    date: "November 2025",
-  },
-];
-
 export const GALLERY_ITEMS: GalleryItem[] = GALLERY_IMAGE_PATHS.map((item, i) => ({
   id: String(i + 1),
   src: `/images/gallery/${item.file}`,
@@ -136,9 +94,8 @@ export const NAV_LINKS = [
   { href: "/#about", label: "About" },
   { href: "/#services", label: "Services" },
   { href: "/#gallery", label: "Gallery" },
-  { href: "/#reviews", label: "Reviews" },
   { href: "/#contact", label: "Contact" },
 ];
 
-export { INSTAGRAM_IMAGES as INSTAGRAM_PLACEHOLDER } from "./images";
+
 

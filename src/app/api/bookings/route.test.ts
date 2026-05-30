@@ -9,12 +9,13 @@ vi.mock("@/lib/store", () => ({
 
 vi.mock("@/lib/email", () => ({
   sendConfirmationEmail: vi.fn(),
+  sendOwnerBookingEmail: vi.fn(),
 }));
 
 import { GET, POST } from "./route";
 import type { Booking } from "@/types";
 import { getBookings, getBlockedSlots, getTechnicianById, saveBooking } from "@/lib/store";
-import { sendConfirmationEmail } from "@/lib/email";
+import { sendConfirmationEmail, sendOwnerBookingEmail } from "@/lib/email";
 
 const mockBooking: Booking = {
   id: "booking-1",
@@ -39,6 +40,7 @@ const mockedGetBlockedSlots = vi.mocked(getBlockedSlots);
 const mockedGetTechnicianById = vi.mocked(getTechnicianById);
 const mockedSaveBooking = vi.mocked(saveBooking);
 const mockedSendConfirmationEmail = vi.mocked(sendConfirmationEmail);
+const mockedSendOwnerBookingEmail = vi.mocked(sendOwnerBookingEmail);
 
 describe("API /bookings route", () => {
   beforeEach(() => {
@@ -147,6 +149,7 @@ describe("API /bookings route", () => {
     mockedGetBlockedSlots.mockResolvedValue([]);
     mockedSaveBooking.mockResolvedValue(mockBooking);
     mockedSendConfirmationEmail.mockResolvedValue(true);
+    mockedSendOwnerBookingEmail.mockResolvedValue(true);
 
     const payload = {
       serviceId: "mani-spa",
@@ -172,5 +175,6 @@ describe("API /bookings route", () => {
     expect(body).toEqual(mockBooking);
     expect(mockedSaveBooking).toHaveBeenCalled();
     expect(mockedSendConfirmationEmail).toHaveBeenCalledWith(mockBooking);
+    expect(mockedSendOwnerBookingEmail).toHaveBeenCalledWith(mockBooking);
   });
 });
