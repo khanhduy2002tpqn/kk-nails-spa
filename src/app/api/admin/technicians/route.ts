@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createTechnicianWithAccount, getTechnicians, removeTechnician } from "@/lib/store";
-import { technicianAccountSchema } from "@/lib/validation";
+import { createTechnicianWithAccount, getTechnicians, removeTechnician, updateTechnicianProfile } from "@/lib/store";
+import { verifyStaffToken } from "@/lib/staff-auth";
+import { technicianAccountSchema, technicianProfileUpdateSchema } from "@/lib/validation";
 
 function checkAdmin(request: NextRequest): boolean {
   const key = request.headers.get("x-admin-key");
@@ -52,4 +53,28 @@ export async function DELETE(request: NextRequest) {
   const ok = await removeTechnician(id);
   if (!ok) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json({ success: true });
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const parsed = technicianProfileUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid technician update data" }, { status: 400 });
+    }
+
+    const session = verifyStaffToken(request.headers.get("x-staff-token"));
+    const allowed =
+      checkAdmin(request) ||
+      (session?.role === "technician" && session.technicianId === parsed.data.id);
+    if (!allowed) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const ok = await updateTechnicianProfile(parsed.data);
+    if (!ok) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Failed to update technician" }, { status: 500 });
+  }
 }

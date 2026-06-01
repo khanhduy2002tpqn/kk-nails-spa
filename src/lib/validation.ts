@@ -48,3 +48,15 @@ export const technicianAccountSchema = z.object({
   username: z.string().trim().min(2).max(50),
   password: z.string().min(6).max(100),
 });
+
+export const technicianProfileUpdateSchema = z.object({
+  id: z.string().trim().min(1),
+  name: z.string().trim().min(2).max(80),
+  title: z.string().trim().min(2).max(100),
+  specialties: z.array(z.string().trim().min(1).max(50)).min(1).max(8),
+});
+
+export const resetStaffPasswordSchema = z.object({
+  accountId: z.string().trim().min(1),
+  password: z.string().min(6).max(100),
+});

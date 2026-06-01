@@ -123,7 +123,7 @@ export async function getStaffAccounts(): Promise<PublicStaffAccount[]> {
   const db = await getMongoDb();
   const accounts = await db
     .collection<StaffAccount>(STAFF_COLLECTION)
-    .find()
+    .find({ active: true })
     .sort({ createdAt: -1 })
     .toArray();
 
@@ -222,6 +222,26 @@ export async function removeTechnician(id: string): Promise<boolean> {
   return technicianResult.matchedCount === 1;
 }
 
+export async function updateTechnicianProfile(input: {
+  id: string;
+  name: string;
+  title: string;
+  specialties: string[];
+}): Promise<boolean> {
+  const db = await getMongoDb();
+  const result = await db.collection<Technician>(TECHNICIANS_COLLECTION).updateOne(
+    { id: input.id, active: true },
+    {
+      $set: {
+        name: input.name.trim(),
+        title: input.title.trim(),
+        specialties: input.specialties.map((item) => item.trim()).filter(Boolean),
+      },
+    }
+  );
+  return result.matchedCount === 1;
+}
+
 export async function verifyStaffLogin(usernameInput: string, password: string): Promise<PublicStaffAccount | null> {
   await ensureDefaultAdminAccount();
   const db = await getMongoDb();
@@ -233,4 +253,20 @@ export async function verifyStaffLogin(usernameInput: string, password: string):
   }
 
   return publicStaffAccount(account);
+}
+
+export async function resetStaffPassword(accountId: string, password: string): Promise<boolean> {
+  await ensureDefaultAdminAccount();
+  const db = await getMongoDb();
+  const result = await db.collection<StaffAccount>(STAFF_COLLECTION).updateOne(
+    { id: accountId },
+    {
+      $set: {
+        passwordHash: hashPassword(password),
+        updatedAt: new Date().toISOString(),
+      },
+    }
+  );
+
+  return result.matchedCount === 1;
 }
