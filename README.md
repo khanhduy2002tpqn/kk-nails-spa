@@ -48,6 +48,8 @@ Copy `.env.example` to `.env.local`:
 
 ```bash
 ADMIN_USERNAME=admin
+APP_MODE=release
+SEED_DEFAULT_TECHNICIANS=false
 ADMIN_PASSWORD=your-secure-password
 ADMIN_SECRET=your-secure-admin-api-key
 RESEND_API_KEY=          # Optional — sends real confirmation emails

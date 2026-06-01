@@ -29,6 +29,8 @@ cp .env.example .env.local
 
 ```env
 ADMIN_SECRET=your-secure-key
+APP_MODE=release
+SEED_DEFAULT_TECHNICIANS=false
 MONGODB_URI=mongodb+srv://<user>:<password>@cluster.example.net/kk-nails-spa
 RESEND_API_KEY=          # Optional for real email delivery
 RESEND_FROM_EMAIL=

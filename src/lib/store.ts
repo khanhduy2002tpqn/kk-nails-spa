@@ -68,6 +68,8 @@ export async function removeBlockedSlot(id: string): Promise<boolean> {
 }
 
 export async function ensureDefaultTechnicians(): Promise<void> {
+  if (process.env.SEED_DEFAULT_TECHNICIANS !== "true") return;
+
   const db = await getMongoDb();
   const collection = db.collection<Technician>(TECHNICIANS_COLLECTION);
   const existing = await collection.findOne({});
@@ -231,42 +233,4 @@ export async function verifyStaffLogin(usernameInput: string, password: string):
   }
 
   return publicStaffAccount(account);
-}
-
-export async function seedSampleData() {
-  const existing = await getBookings();
-  if (existing.length > 0) return;
-
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const dateStr = tomorrow.toISOString().split("T")[0];
-
-  await saveBooking({
-    serviceId: "mani-gel",
-    serviceName: "Signature Gel Manicure",
-    technicianId: "kim",
-    technicianName: "Kim",
-    date: dateStr,
-    time: "10:00 AM",
-    duration: 30,
-    customerName: "Sarah Johnson",
-    customerPhone: "610-555-0123",
-    customerEmail: "sarah@email.com",
-    notes: "Prefer soft pink shade",
-    status: "confirmed",
-  });
-
-  await saveBooking({
-    serviceId: "pedi-spa",
-    serviceName: "Spa Pedicure",
-    technicianId: "kelly",
-    technicianName: "Kelly",
-    date: dateStr,
-    time: "2:00 PM",
-    duration: 30,
-    customerName: "Maria Garcia",
-    customerPhone: "610-555-0456",
-    customerEmail: "maria@email.com",
-    status: "confirmed",
-  });
 }
