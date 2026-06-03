@@ -3,7 +3,7 @@ const g = (name: string) => `/images/gallery/${name}`;
 
 export const BRAND_IMAGES = {
   hero: g("05.png"),
-  about: g("13.png"),
+  about: g("37.jpg"),
   logoMark: g("02.png"),
 } as const;
 
@@ -43,5 +43,6 @@ export const GALLERY_IMAGE_PATHS = [
   { file: "34.jpg", alt: "Creative manicure finish", category: "nails" as const },
   { file: "35.jpg", alt: "Detailed nail design by K&K Nails and Spa", category: "nails" as const },
   { file: "36.jpg", alt: "Finished manicure from K&K Nails and Spa", category: "nails" as const },
+  { file: "37.jpg", alt: "K&K Nails and Spa featured salon image", category: "clients" as const },
   { file: "01.png", alt: "Pink marble French tip manicure", category: "nails" as const },
 ];

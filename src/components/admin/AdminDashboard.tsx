@@ -302,7 +302,13 @@ export function AdminDashboard() {
 
   if (!session) {
     return (
-      <div className="soft-card mx-auto max-w-md">
+      <form
+        className="soft-card mx-auto max-w-md"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (!loading && username && password) login();
+        }}
+      >
         <Lock className="mx-auto h-10 w-10 text-pink-accent" />
         <h2 className="mt-4 text-center font-display text-xl font-semibold">Staff Login</h2>
         <p className="mt-2 text-center text-sm text-muted">
@@ -326,10 +332,10 @@ export function AdminDashboard() {
             {loginError}
           </p>
         )}
-        <button type="button" onClick={login} disabled={loading || !username || !password} className="btn-primary mt-4 w-full disabled:opacity-50">
+        <button type="submit" disabled={loading || !username || !password} className="btn-primary mt-4 w-full disabled:opacity-50">
           Enter Dashboard
         </button>
-      </div>
+      </form>
     );
   }
 

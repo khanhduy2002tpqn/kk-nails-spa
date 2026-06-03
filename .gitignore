@@ -44,3 +44,4 @@ next-env.d.ts
 *.spec.ts
 test*
 SECURITY-REPORT.md
+STAFF_ACCOUNT.txt

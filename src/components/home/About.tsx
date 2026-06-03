@@ -43,13 +43,13 @@ export function About() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative aspect-[4/5] overflow-hidden rounded-3xl"
+            className="relative aspect-[5/4] overflow-hidden rounded-3xl lg:aspect-[6/5]"
           >
             <Image
               src={BRAND_IMAGES.about}
               alt="Professional nail art at K&K Nails and Spa"
               fill
-              className="object-cover"
+              className="object-cover object-[center_35%]"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
             <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-pink-cream/40" />
